@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/static/icons/favicon.ico" />
+    <!-- CSS & Fonts-->
+    <link rel="stylesheet" href="local.css" />
+    <link rel="stylesheet" href="/static/css/global.css" />
+    <link rel="stylesheet" href="/static/css/overlays.css" />
+    <link rel="stylesheet" href="/static/css/formatting.css" />
+    <link rel="stylesheet" href="/static/css/fonts.css" />
+    <script src="/static/js/general.js"></script>
+    <title>re/configuration</title>
+  </head>
+  <body>
+    <!-------------- BAR -------------->
+    <div id="bar">
+      <p id="left">
+        <a target="_blank" href="https://github.com/zerfithel/">GitHub</a> |
+        <a target="_blank" href="https://codeberg.org/archerash">Codeberg</a> |
+        <a target="_blank" href="https://discord.gg/KhXCftHnts">Discord Server</a>
+      </p>
+    </div>
+    <!-------------- BOTTOM TEXT -------------->
+    <div id="info" style="padding-top: 30px;">
+      
+      <h1>RE init system configuration guide</h1>
+      <p>
+        This page will guide you through configuration of Re init system on your Linux machine.
+      </p>
+      
+      <dl>
+        <dt><a href="#">1.</a> Adding and removing services</dt>
+        <dt><a href="#">2.</a> Running graphical session (X11 &amp; Wayland)</dt>
+        <dt><a href="#">3.</a> Running Pipewire</dt>
+      </dl>
+      
+      <h1>1. Adding and removing services</h1>
+      <p>If you want to create a core-service (service that is being run before post-mount services) you can add it to <m>/etc/re/core-services</m> directory. Simply add shell script with <a href="https://en.wikipedia.org/wiki/Shebang_(Unix)">shebang</a> at the top and the code you want to run each boot. Add there services only that are required to ensure basic functionality of operating system. Services like NetworkManager, tty or dbus should be added to <m>/var/sv</m> directory.</p>
+
+      <p>To disable service simply remove the file that starts it from your core-service or service directory.</p>
+
+      <h1>2. Running graphical session (X11 &amp; Wayland)</h1>
+      <p>To start graphical session you have to run: udevd, dbus. Add these services to given directories</p>
+
+      <dl>
+        <dt><a href="https://github.com/zerfithel/re/blob/main/core-services/01-udevd.sh">01-udevd.sh</a> /etc/re/core-services</dt>
+        <dt>Either run <a href="https://github.com/zerfithel/re/blob/main/core-services/02-filesystems.sh">02-filesystems.sh</a> or <a href="https://github.com/zerfithel/re/tree/main/src/mount">02-filesystems.bin</a> and move it to /etc/re/core-services</dt>
+        <dt><a href="https://github.com/zerfithel/re/blob/main/core-services/03-hostname.sh">03-hostname.sh</a></dt>
+      </dl>
+
+      <p>To add dbus to autostart add this to your /var/sv/dbus file:</p>
+      <p><cd>#!/bin/sh<br>
+        mkdir -p /run/dbus
+        exec dbus-daemon --system
+      </cd></p>
+
+      <h2>2.1. Running X11 session without display manager</h2>
+      <p>Now, to run X11 session simply add to your ~/.xinitrc file command that will start your de/wm. Add this to your ~/.xinitrc file and replace COMMAND with your actual command to start your desktop environment/window manager</p>
+
+      <p><cd>#!/bin/sh<br>
+        exec COMMAND
+      </cd></p>
+
+      <p>And then run <m>startx</m>.</p>
+
+      <h2>2.2. Display Manager</h2>
+      <p>To run other sessions you can download your favourite display manager (sddm, lightdm, gdm etc.) and create a service in /var/sv that will start display manager each boot.</p>
+
+      <p>Example service to start lightdm:</p>
+      <p><cd>#!/bin/sh<br>
+        mkdir -p /run/lightdm
+        exec lightdm
+      </cd></p>
+
+      <h1>Running Pipewire</h1>
+      <p>This guide was moved to <a href="/software/re/pipewire">re/pipewire</a>.</p>
+
+      <!-- License yap -->
+      <hr>
+      <p id="end">&copy; 2025 Zerfithel Open Source Projects - See repositories for details about licensing <a href="https://github.com/zerfithel">here</a>.</p>
+    </div>
+  </body>
+</html>
