@@ -5,212 +5,337 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GL - Examples</title>
 <link rel="stylesheet" href="style.css">
-
-<!-- Prism CSS -->
 <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css" rel="stylesheet"/>
+<style>
+.video-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 900px;
+}
+
+.video-wrapper video {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.controls {
+    margin-top: 8px;
+}
+
+.controls button {
+    margin-right: 6px;
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #3a3a3a;
+    background: #1e1e1e;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.controls button:hover {
+    background: #2a2a2a;
+}
+
+.code-block {
+    display: none;
+    margin-top: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+</style>
 </head>
 <body>
 
 <header>
-    <img src="assets/logo.png" alt="GL Library Logo" class="logo">
-    <div class="header-text">
-        <h1>GL Library - Examples</h1>
-        <p>Sample usage and code</p>
-    </div>
+    <h1>GL Library – Examples</h1>
+    <p>Sample usage and code</p>
 </header>
 
 <main>
-    <section>
-        <h2>Simple Circle Animation</h2>
-        <video src="assets/animation_1.mp4" controls alt="Simple circle animation"></video>
-        <pre><code class="language-python">import gl
 
+<!-- Simple Circle Animation -->
+<section>
+<h2>Simple Circle Animation</h2>
+
+<div class="video-wrapper">
+    <video src="assets/animation_1.mp4" controls></video>
+</div>
+
+<div class="controls">
+    <button class="code-btn" onclick="toggleCode(this)">Show code</button>
+    <button onclick="copyCode(this)">Copy code</button>
+    <button class="video-btn" onclick="enlargeVideo(this)">Enlarge video</button>
+</div>
+
+<pre class="code-block"><code class="language-python">import gl
+
+# Initialize the graphics library
 gl.init()
-width = gl.get_monitorwidth()
-height = gl.get_monitorheight()
-gl.initwindow("Sample animation", width, height, ["resizable"])
-gl.background(10, 10, 10, 255)
-gl.setfps(60)
+width = gl.get_monitorwidth()    # Get screen width
+height = gl.get_monitorheight()  # Get screen height
+gl.initwindow("Sample animation", width, height, ["resizable"])  # Create a resizable window
+gl.background(10, 10, 10, 255)  # Set background color
+gl.setfps(60)                    # Set frames per second
 
+# Create a circle
 circle = gl.createcircle()
-circle.set_radius(50)
-circle.set_background(255, 0, 0, 255)
-circle.set_border(0, 0, 0, 255, 3)
+circle.set_radius(50)                  # Set radius
+circle.set_background(255, 0, 0, 255) # Red fill
+circle.set_border(0, 0, 0, 255, 3)    # Black border
 
-x = 0
-going_left = False
-running = True
+x = 0                 # Horizontal position
+going_left = False    # Direction flag
+running = True        # Game loop flag
 
+# Main game loop
 while running:
-    if gl.window_closed() or gl.key_pressed() == ord('q'):
+    if gl.window_closed() or gl.key_pressed() == ord('q'):  # Close window or press 'q'
         running = False
 
-    dt = gl.getdt()
+    # Reverse direction if hitting screen edges
     if x >= width:
         going_left = True
     elif x <= 0:
         going_left = False
 
+    # Move circle
     x += -5 if going_left else 5
-    circle.set_pos(x, height // 2)
-    circle.draw()
+    circle.set_pos(x, height // 2)  # Set circle position
+    circle.draw()                   # Draw circle
 
-    gl.present()
-    gl.clear()
+    gl.present()  # Update display
+    gl.clear()    # Clear for next frame
 
-gl.cleanup()</code></pre>
-    </section>
+gl.cleanup()  # Cleanup resources</code></pre>
+</section>
 
-    <section>
-        <h2>Ping Pong Game</h2>
-        <video src="assets/pingpong.mp4" controls alt="Ping Pong"></video>
-        <pre><code class="language-python">import gl
+<!-- Ping Pong Game -->
+<section>
+<h2>Ping Pong Game</h2>
+
+<div class="video-wrapper">
+    <video src="assets/pingpong.mp4" controls></video>
+</div>
+
+<div class="controls">
+    <button class="code-btn" onclick="toggleCode(this)">Show code</button>
+    <button onclick="copyCode(this)">Copy code</button>
+    <button class="video-btn" onclick="enlargeVideo(this)">Enlarge video</button>
+</div>
+
+<pre class="code-block"><code class="language-python">import gl
+
+# Screen dimensions
 WIDTH = 0
 HEIGHT = 0
 
+# Paddle and ball settings
 PADDLE_HEIGHT = 140
 PADDLE_SPEED = 600.0
-
 BALL_RADIUS = 14
 BALL_SPEED = 650.0
 
+# Arrow key codes
 KEY_UP = 1073741906
 KEY_DOWN = 1073741905
 
+# Initialize graphics
 gl.init()
 gl.initwindow("Ping Pong", WIDTH, HEIGHT, ["fullscreen_desktop"])
 gl.background(0, 0, 0, 255)
 gl.setfps(60)
 
+# Get actual screen size
 HEIGHT = gl.get_monitorheight()
 WIDTH = gl.get_monitorwidth()
 
+# Create paddles and ball
 left = gl.createline()
 right = gl.createline()
 ball = gl.createcircle()
 
-left.set_color(255, 0, 0, 255)
-right.set_color(0, 0, 255, 255)
+# Set paddle colors
+left.set_color(255,0,0,255)
+right.set_color(0,0,255,255)
 
+# Set ball properties
 ball.set_radius(BALL_RADIUS)
-ball.set_background(255, 255, 255, 255)
-ball.set_border(255, 255, 255, 255, 0)
+ball.set_background(255,255,255,255)
+ball.set_border(255,255,255,255,0)
 
+# Initial positions
 left_x = 80
 left_y = HEIGHT // 2
-
 right_x = WIDTH - 80
 right_y = HEIGHT // 2
 
+# Ball initial position and velocity
 ball_x = WIDTH // 2
 ball_y = HEIGHT // 2
 ball_vx = BALL_SPEED
 ball_vy = BALL_SPEED * 0.5
 
-score_left = 0
-score_right = 0
-
 running = True
 
+# Function to draw a paddle
 def draw_paddle(line, x, y):
-    y1 = int(y - PADDLE_HEIGHT // 2)
-    y2 = int(y + PADDLE_HEIGHT // 2)
+    y1 = int(y - PADDLE_HEIGHT / 2)
+    y2 = int(y + PADDLE_HEIGHT / 2)
     line.set_points(int(x), y1, int(x), y2)
     line.draw()
 
+# Game loop
 while running:
-    dt = gl.getdt()
+    dt = gl.getdt()  # Delta time for smooth movement
 
     if gl.window_closed():
         running = False
 
-    kpress = gl.key_pressed()
-    keys = gl.get_holdkeys()
+    keys = gl.get_holdkeys()  # Currently pressed keys
 
-    if kpress in (ord('q'), ord('Q')):
-        running = False
+    # Paddle movement controls
+    if ord('w') in keys: left_y -= PADDLE_SPEED * dt
+    if ord('s') in keys: left_y += PADDLE_SPEED * dt
+    if KEY_UP in keys: right_y -= PADDLE_SPEED * dt
+    if KEY_DOWN in keys: right_y += PADDLE_SPEED * dt
 
-    if ord('w') in keys:
-        left_y -= PADDLE_SPEED * dt
-    if ord('s') in keys:
-        left_y += PADDLE_SPEED * dt
-
-    if KEY_UP in keys:
-        right_y -= PADDLE_SPEED * dt
-    if KEY_DOWN in keys:
-        right_y += PADDLE_SPEED * dt
-
-    half = PADDLE_HEIGHT / 2
-    left_y = max(half, min(HEIGHT - half, left_y))
-    right_y = max(half, min(HEIGHT - half, right_y))
-
+    # Update ball position
     ball_x += ball_vx * dt
     ball_y += ball_vy * dt
 
-    if ball_y - BALL_RADIUS <= 0:
-        ball_y = BALL_RADIUS
-        ball_vy = -ball_vy
-    elif ball_y + BALL_RADIUS >= HEIGHT:
-        ball_y = HEIGHT - BALL_RADIUS
-        ball_vy = -ball_vy
+    gl.clear()  # Clear screen
 
-    if (ball_x - BALL_RADIUS <= left_x and
-        left_y - half <= ball_y <= left_y + half and
-        ball_vx < 0):
-        ball_x = left_x + BALL_RADIUS
-        ball_vx = -ball_vx
-        offset = (ball_y - left_y) / half
-        ball_vy = BALL_SPEED * 0.7 * offset
-
-    if (ball_x + BALL_RADIUS >= right_x and
-        right_y - half <= ball_y <= right_y + half and
-        ball_vx > 0):
-        ball_x = right_x - BALL_RADIUS
-        ball_vx = -ball_vx
-        offset = (ball_y - right_y) / half
-        ball_vy = BALL_SPEED * 0.7 * offset
-
-    scored = False
-    if ball_x < 0:
-        score_right += 1
-        scored = True
-    elif ball_x > WIDTH:
-        score_left += 1
-        scored = True
-
-    if scored:
-        ball_x = WIDTH // 2
-        ball_y = HEIGHT // 2
-        ball_vx = BALL_SPEED if scored else -BALL_SPEED
-        ball_vy = BALL_SPEED * 0.5
-
-    gl.clear()
-
+    # Draw paddles
     draw_paddle(left, left_x, left_y)
     draw_paddle(right, right_x, right_y)
 
+    # Draw ball
     ball.set_pos(int(ball_x), int(ball_y))
     ball.draw()
 
+    gl.present()  # Update display
+
+gl.cleanup()  # Cleanup resources</code></pre>
+</section>
+
+<!-- Rectangle Player Movement -->
+<section>
+<h2>Rectangle Player Movement</h2>
+
+<div class="video-wrapper">
+    <video src="assets/move.mp4" controls></video>
+</div>
+
+<div class="controls">
+    <button class="code-btn" onclick="toggleCode(this)">Show code</button>
+    <button onclick="copyCode(this)">Copy code</button>
+    <button class="video-btn" onclick="enlargeVideo(this)">Enlarge video</button>
+</div>
+
+<pre class="code-block"><code class="language-python">import gl
+
+# Initialize graphics
+gl.init()
+WIDTH, HEIGHT = gl.get_monitorwidth(), gl.get_monitorheight()
+gl.initwindow("Moving game sample", WIDTH, HEIGHT, ["resizable"])
+gl.background(30,30,30,255)
+gl.setfps(60)
+
+# Player rectangle properties
+rect_width, rect_height = 40, 40
+x = WIDTH // 2  # Horizontal position
+y = HEIGHT      # Vertical position
+speed = 300     # Horizontal speed
+vel_y = 0       # Vertical velocity
+gravity = 900   # Gravity acceleration
+jump_strength = -420  # Jump impulse
+on_ground = True
+
+running = True
+while running:
+    dt = gl.getdt()  # Time delta
+
+    if gl.window_closed() or gl.key_pressed() == ord('q'):
+        running = False
+
+    keys = gl.get_holdkeys()
+
+    # Horizontal movement
+    if ord('a') in keys: x -= speed * dt
+    if ord('d') in keys: x += speed * dt
+
+    # Screen boundaries
+    if x < 0: x = 0
+    if x > WIDTH - rect_width: x = WIDTH - rect_width
+
+    # Jump
+    if (ord('w') in keys) and on_ground:
+        vel_y = jump_strength
+        on_ground = False
+
+    # Gravity
+    if not on_ground:
+        vel_y += gravity * dt
+        y += vel_y * dt
+
+    # Floor collision
+    if y >= HEIGHT - rect_height:
+        y = HEIGHT - rect_height
+        vel_y = 0
+        on_ground = True
+
+    # Draw player rectangle
+    gl.clear()
+    rect = gl.createrect()
+    rect.set_size(rect_width, rect_height)
+    rect.set_pos(int(x), int(y))
+    rect.set_background(255,0,0,255)
+    rect.draw()
     gl.present()
 
-gl.cleanup()
+gl.cleanup()</code></pre>
+</section>
 
-print("\n=== GAME OVER ===")
-print(f"Red (W/S): {score_left}")
-print(f"Blue (↑/↓): {score_right}")
-</code></pre>
-    </section>
+<nav>
+    <a href="/index.html">Start</a>
+    <a href="01-function-list.html">Function List</a>
+</nav>
 
-    <nav>
-        <a href="/index.html">Start</a>
-        <a href="01-function-list.html">Function List</a>
-    </nav>
-</main>
-
-<!-- Prism JS -->
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script>
+function toggleCode(btn){
+    let pre = btn.closest('section').querySelector('.code-block');
+    if(pre.style.display === 'block'){
+        pre.style.display = 'none';
+        btn.textContent = 'Show code';
+    } else {
+        pre.style.display = 'block';
+        btn.textContent = 'Hide code';
+    }
+}
+
+function enlargeVideo(btn){
+    let video = btn.closest('section').querySelector('video');
+    if(video.requestFullscreen){
+        video.requestFullscreen();
+    } else if(video.webkitRequestFullscreen){
+        video.webkitRequestFullscreen();
+    } else if(video.msRequestFullscreen){
+        video.msRequestFullscreen();
+    }
+}
+
+function copyCode(btn){
+    let code = btn.closest('section').querySelector('.code-block code');
+    navigator.clipboard.writeText(code.innerText).then(()=>{
+        btn.textContent = 'Copied!';
+        setTimeout(()=>{btn.textContent='Copy code';},1500);
+    });
+}
+</script>
 
 </body>
 </html>
