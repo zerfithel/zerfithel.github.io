@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GL - Function List</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <img src="assets/logo.png" alt="GL Library Logo" class="logo">
+        <div class="header-text">
+            <h1>GL Library</h1>
+            <p>A quick guide to functions and usage examples</p>
+        </div>
+    </header>
+
+    <main>
+        <section>
+            <h2>Core Functions</h2>
+            <ul>
+                <li><code>gl.init()</code> – Initializes SDL and prepares the library for use.</li>
+                <li><code>gl.initwindow(title, width, height, options)</code> – Creates a window and renderer. Options can include <code>fullscreen</code>, <code>resizable</code>, <code>borderless</code>, <code>fullscreen_desktop</code>, <code>opengl</code>.</li>
+                <li><code>gl.cleanup()</code> – Destroys the renderer and window, quits SDL.</li>
+                <li><code>gl.background(r, g, b, a)</code> – Sets the background color for clearing.</li>
+                <li><code>gl.clear()</code> – Clears the screen using the current background color.</li>
+                <li><code>gl.setfps(fps)</code> – Sets the target frames per second. Pass 0 to disable FPS limiting.</li>
+                <li><code>gl.getdt()</code> – Returns the delta time in seconds since the last frame.</li>
+                <li><code>gl.present()</code> – Updates the display, handles events, and calculates delta time.</li>
+                <li><code>gl.window_closed()</code> – Returns <code>True</code> if the window was closed.</li>
+                <li><code>gl.key_pressed()</code> – Returns the last key pressed as a keycode.</li>
+                <li><code>gl.key_hold()</code> – Returns any currently held key as a keycode (first found).</li>
+                <li><code>gl.get_holdkeys()</code> – Returns a list of all currently held keys.</li>
+                <li><code>gl.mouse_move()</code> – Returns <code>True</code> if the mouse has moved since the last frame.</li>
+                <li><code>gl.get_monitorwidth()</code> – Returns the width of the primary monitor.</li>
+                <li><code>gl.get_monitorheight()</code> – Returns the height of the primary monitor.</li>
+                <li><code>gl.get_pixel(x, y)</code> – Returns the RGBA color of the pixel at (x, y) as a tuple.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Shape Objects</h2>
+
+            <h3>Circle</h3>
+            <ul>
+                <li><code>gl.createcircle()</code> – Creates a circle object.</li>
+                <li>Methods:
+                    <ul>
+                        <li><code>set_pos(x, y)</code> – Set the circle's center position.</li>
+                        <li><code>set_radius(radius)</code> – Set the circle's radius.</li>
+                        <li><code>set_background(r, g, b, a)</code> – Set fill color with alpha.</li>
+                        <li><code>set_border(r, g, b, a, thickness)</code> – Set border color and thickness.</li>
+                        <li><code>draw()</code> – Draws the circle on the screen.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>Line</h3>
+            <ul>
+                <li><code>gl.createline()</code> – Creates a line object.</li>
+                <li>Methods:
+                    <ul>
+                        <li><code>set_points(x1, y1, x2, y2)</code> – Set line endpoints.</li>
+                        <li><code>set_color(r, g, b, a)</code> – Set line color with alpha.</li>
+                        <li><code>draw()</code> – Draws the line on the screen.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>Rectangle</h3>
+            <ul>
+                <li><code>gl.createrect()</code> – Creates a rectangle object.</li>
+                <li>Methods:
+                    <ul>
+                        <li><code>set_pos(x, y)</code> – Set rectangle position (top-left corner).</li>
+                        <li><code>set_size(width, height)</code> – Set rectangle size.</li>
+                        <li><code>set_background(r, g, b, a)</code> – Set fill color with alpha.</li>
+                        <li><code>set_border(r, g, b, a, thickness)</code> – Set border color and thickness.</li>
+                        <li><code>draw()</code> – Draws the rectangle on the screen.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>Shape Utilities</h3>
+            <ul>
+                <li><code>gl.destroy(shape)</code> – Fills the shape with the background color and marks it as invisible.</li>
+            </ul>
+        </section>
+
+        <nav>
+            <a href="/index.html">Start</a>
+            <a href="02-examples.html">Examples</a>
+        </nav>
+    </main>
+</body>
+</html>

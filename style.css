@@ -1,0 +1,135 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #1e1e1e;
+    color: #ccc;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+header {
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+}
+
+.logo {
+    position: absolute;
+    left: 20px;
+    max-width: 70px;
+    height: auto;
+}
+
+.header-text {
+    text-align: center;
+}
+
+.header-text h1 {
+    margin: 0;
+    color: #fff;
+    font-size: 2rem;
+}
+
+.header-text p {
+    margin: 5px 0 0 0;
+    color: #ccc;
+}
+
+main {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+h1, h2, h3 {
+    color: #fff;
+}
+
+section {
+    background: #2b2b2b;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+video {
+    width: 100%;
+    height: auto;
+    max-height: 600px;
+    margin: 10px 0;
+    border-radius: 6px;
+    border: 1px solid #444;
+    display: block;
+}
+
+nav {
+    text-align: center;
+    margin: 20px 0;
+}
+
+nav a {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 0 8px;
+    border: 2px solid #4da6ff;
+    border-radius: 6px;
+    color: #4da6ff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.2s, color 0.2s;
+}
+
+nav a:hover {
+    background: #4da6ff; 
+    color: #fff;
+}
+
+.link {
+    color: #1e90ff;
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    display: block;
+    right: 0;
+    background: #1e90ff;
+    transition: width 0.3s ease;
+}
+
+.link:hover {
+    color: #63b3ed;
+}
+
+.link:hover::after {
+    width: 100%;
+    left: 0;
+    background: #63b3ed;
+}
+
+pre {
+    border-radius: 6px;
+    overflow-x: auto;
+    padding: 15px;
+}
+
+@media (max-width: 768px) {
+    main { padding: 0 10px; }
+    section { padding: 15px; }
+    video { max-height: 400px; }
+}
+
+@media (max-width: 480px) {
+    header, nav a { padding: 15px; }
+    video { max-height: 300px; }
+    .logo { max-width: 50px; }
+    .header-text h1 { font-size: 1.5rem; }
+}

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GL - Examples</title>
+<link rel="stylesheet" href="style.css">
+
+<!-- Prism CSS -->
+<link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css" rel="stylesheet"/>
+</head>
+<body>
+
+<header>
+    <img src="assets/logo.png" alt="GL Library Logo" class="logo">
+    <div class="header-text">
+        <h1>GL Library - Examples</h1>
+        <p>Sample usage and code</p>
+    </div>
+</header>
+
+<main>
+    <section>
+        <h2>Simple Circle Animation</h2>
+        <video src="assets/animation_1.mp4" controls alt="Simple circle animation"></video>
+        <pre><code class="language-python">import gl
+
+gl.init()
+width = gl.get_monitorwidth()
+height = gl.get_monitorheight()
+gl.initwindow("Sample animation", width, height, ["resizable"])
+gl.background(10, 10, 10, 255)
+gl.setfps(60)
+
+circle = gl.createcircle()
+circle.set_radius(50)
+circle.set_background(255, 0, 0, 255)
+circle.set_border(0, 0, 0, 255, 3)
+
+x = 0
+going_left = False
+running = True
+
+while running:
+    if gl.window_closed() or gl.key_pressed() == ord('q'):
+        running = False
+
+    dt = gl.getdt()
+    if x >= width:
+        going_left = True
+    elif x <= 0:
+        going_left = False
+
+    x += -5 if going_left else 5
+    circle.set_pos(x, height // 2)
+    circle.draw()
+
+    gl.present()
+    gl.clear()
+
+gl.cleanup()</code></pre>
+    </section>
+
+    <section>
+        <h2>Ping Pong Game</h2>
+        <video src="assets/pingpong.mp4" controls alt="Ping Pong"></video>
+        <pre><code class="language-python">import gl
+WIDTH = 0
+HEIGHT = 0
+
+PADDLE_HEIGHT = 140
+PADDLE_SPEED = 600.0
+
+BALL_RADIUS = 14
+BALL_SPEED = 650.0
+
+KEY_UP = 1073741906
+KEY_DOWN = 1073741905
+
+gl.init()
+gl.initwindow("Ping Pong", WIDTH, HEIGHT, ["fullscreen_desktop"])
+gl.background(0, 0, 0, 255)
+gl.setfps(60)
+
+HEIGHT = gl.get_monitorheight()
+WIDTH = gl.get_monitorwidth()
+
+left = gl.createline()
+right = gl.createline()
+ball = gl.createcircle()
+
+left.set_color(255, 0, 0, 255)
+right.set_color(0, 0, 255, 255)
+
+ball.set_radius(BALL_RADIUS)
+ball.set_background(255, 255, 255, 255)
+ball.set_border(255, 255, 255, 255, 0)
+
+left_x = 80
+left_y = HEIGHT // 2
+
+right_x = WIDTH - 80
+right_y = HEIGHT // 2
+
+ball_x = WIDTH // 2
+ball_y = HEIGHT // 2
+ball_vx = BALL_SPEED
+ball_vy = BALL_SPEED * 0.5
+
+score_left = 0
+score_right = 0
+
+running = True
+
+def draw_paddle(line, x, y):
+    y1 = int(y - PADDLE_HEIGHT // 2)
+    y2 = int(y + PADDLE_HEIGHT // 2)
+    line.set_points(int(x), y1, int(x), y2)
+    line.draw()
+
+while running:
+    dt = gl.getdt()
+
+    if gl.window_closed():
+        running = False
+
+    kpress = gl.key_pressed()
+    keys = gl.get_holdkeys()
+
+    if kpress in (ord('q'), ord('Q')):
+        running = False
+
+    if ord('w') in keys:
+        left_y -= PADDLE_SPEED * dt
+    if ord('s') in keys:
+        left_y += PADDLE_SPEED * dt
+
+    if KEY_UP in keys:
+        right_y -= PADDLE_SPEED * dt
+    if KEY_DOWN in keys:
+        right_y += PADDLE_SPEED * dt
+
+    half = PADDLE_HEIGHT / 2
+    left_y = max(half, min(HEIGHT - half, left_y))
+    right_y = max(half, min(HEIGHT - half, right_y))
+
+    ball_x += ball_vx * dt
+    ball_y += ball_vy * dt
+
+    if ball_y - BALL_RADIUS <= 0:
+        ball_y = BALL_RADIUS
+        ball_vy = -ball_vy
+    elif ball_y + BALL_RADIUS >= HEIGHT:
+        ball_y = HEIGHT - BALL_RADIUS
+        ball_vy = -ball_vy
+
+    if (ball_x - BALL_RADIUS <= left_x and
+        left_y - half <= ball_y <= left_y + half and
+        ball_vx < 0):
+        ball_x = left_x + BALL_RADIUS
+        ball_vx = -ball_vx
+        offset = (ball_y - left_y) / half
+        ball_vy = BALL_SPEED * 0.7 * offset
+
+    if (ball_x + BALL_RADIUS >= right_x and
+        right_y - half <= ball_y <= right_y + half and
+        ball_vx > 0):
+        ball_x = right_x - BALL_RADIUS
+        ball_vx = -ball_vx
+        offset = (ball_y - right_y) / half
+        ball_vy = BALL_SPEED * 0.7 * offset
+
+    scored = False
+    if ball_x < 0:
+        score_right += 1
+        scored = True
+    elif ball_x > WIDTH:
+        score_left += 1
+        scored = True
+
+    if scored:
+        ball_x = WIDTH // 2
+        ball_y = HEIGHT // 2
+        ball_vx = BALL_SPEED if scored else -BALL_SPEED
+        ball_vy = BALL_SPEED * 0.5
+
+    gl.clear()
+
+    draw_paddle(left, left_x, left_y)
+    draw_paddle(right, right_x, right_y)
+
+    ball.set_pos(int(ball_x), int(ball_y))
+    ball.draw()
+
+    gl.present()
+
+gl.cleanup()
+
+print("\n=== GAME OVER ===")
+print(f"Red (W/S): {score_left}")
+print(f"Blue (↑/↓): {score_right}")
+</code></pre>
+    </section>
+
+    <nav>
+        <a href="/index.html">Start</a>
+        <a href="01-function-list.html">Function List</a>
+    </nav>
+</main>
+
+<!-- Prism JS -->
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+</body>
+</html>
